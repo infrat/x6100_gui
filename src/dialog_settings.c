@@ -41,6 +41,7 @@ static lv_obj_t     *grid;
 #define SMALL_6     (SMALL_1 * 6 + SMALL_PAD * 5)
 
 #define SMALL_WIDTH 57
+#define TRV_DRIFT_HZ 7500
 
 static lv_coord_t   col_dsc[] = { 740 - (SMALL_1 + SMALL_PAD) * 6, SMALL_1, SMALL_1, SMALL_1, SMALL_1, SMALL_1, SMALL_1, LV_GRID_TEMPLATE_LAST };
 static lv_coord_t   row_dsc[64] = { 1 };
@@ -995,7 +996,7 @@ static void transverter_shift_update_cb(lv_event_t * e) {
     transverter_t   *transverter = lv_event_get_user_data(e);
 
     params_lock();
-    transverter->shift = lv_spinbox_get_value(obj) * 1000000L;
+    transverter->shift = lv_spinbox_get_value(obj) * 1000000L + TRV_DRIFT_HZ;
     params_unlock(&transverter->dirty.shift);
 }
 
@@ -1049,9 +1050,9 @@ static uint8_t make_transverter(uint8_t row, uint8_t n) {
 
     dialog_item(&dialog, obj);
 
-    lv_spinbox_set_value(obj, transverter->shift / 1000000L);
+    lv_spinbox_set_value(obj, transverter->shift / 1000000L - TRV_DRIFT_HZ);
     lv_spinbox_set_range(obj, 42, 500);
-    lv_spinbox_set_digit_format(obj,6, 3);
+    lv_spinbox_set_digit_format(obj,3, 0);
     lv_spinbox_set_digit_step_direction(obj, LV_DIR_LEFT);
     lv_obj_set_size(obj, SMALL_2, 56);
 
