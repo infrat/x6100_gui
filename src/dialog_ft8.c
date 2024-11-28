@@ -59,7 +59,6 @@
 #define FT8_12M_ID      (108 - MEM_FT8_ID)
 #define FT8_10M_ID      (109 - MEM_FT8_ID)
 #define FT8_6M_ID       (110 - MEM_FT8_ID)
-#define FT8_4M_ID       (111 - MEM_FT8_ID)
 #define FT4_80M_ID      (200 - MEM_FT4_ID)
 #define FT4_40M_ID      (201 - MEM_FT4_ID)
 #define FT4_30M_ID      (202 - MEM_FT4_ID)
