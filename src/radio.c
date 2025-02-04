@@ -67,6 +67,17 @@ static void radio_unlock() {
     pthread_mutex_unlock(&control_mux);
 }
 
+void recover_tx() {
+    usleep(10000);
+    x6100_control_vfo_mode_set(subject_get_int(cfg_cur.band->vfo.val), x6100_mode_usb_dig);
+    x6100_control_txpwr_set(0.1f);
+    radio_set_modem(true);
+    usleep(50000);
+    radio_set_modem(false);
+    x6100_control_txpwr_set(params.pwr);
+    x6100_control_vfo_mode_set(subject_get_int(cfg_cur.band->vfo.val), subject_get_int(cfg_cur.mode));
+}
+
 bool radio_tick() {
     if (now_time < prev_time) {
         prev_time = now_time;
@@ -120,6 +131,7 @@ bool radio_tick() {
                     // subject_set_int(cfg_cur.atu.network, pack->atu_params);
                     cfg_atu_save_network(pack->atu_params);
                     WITH_RADIO_LOCK(x6100_control_atu_tune(false));
+                    recover_tx();
                     subject_set_int(cfg.atu_enabled.val, true);
                     notify_rx();
 
@@ -127,6 +139,7 @@ bool radio_tick() {
                     WITH_RADIO_LOCK(x6100_control_cmd(x6100_atu_network, pack->atu_params));
                     // params.atu_loaded = true;
                     // notify_atu_update();
+                    
                     state = RADIO_RX;
                 } else if (pack->flag.tx) {
                     tx_info_update(pack->tx_power * 0.1f, pack->vswr * 0.1f, pack->alc_level * 0.1f);
