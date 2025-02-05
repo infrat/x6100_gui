@@ -68,6 +68,25 @@ static void radio_unlock() {
     pthread_mutex_unlock(&control_mux);
 }
 
+void recover_tx() {
+    // delay 100ms
+    usleep(10000);
+    // set to USB-DIG mode
+    x6100_control_vfo_mode_set(subject_get_int(cfg_cur.band->vfo.val), x6100_mode_usb_dig);
+    // set to minimal power
+    x6100_control_txpwr_set(0.1f);
+    // PTT ON
+    radio_set_modem(true);
+    // delay 100ms
+    usleep(50000);
+    // PTT OFF
+    radio_set_modem(false);
+    // Restore pwr
+    x6100_control_txpwr_set(params.pwr);
+    // Restore mode
+    x6100_control_vfo_mode_set(subject_get_int(cfg_cur.band->vfo.val), subject_get_int(cfg_cur.mode));
+}
+
 bool radio_tick() {
     if (now_time < prev_time) {
         prev_time = now_time;
@@ -119,6 +138,7 @@ bool radio_tick() {
                 if (pack->flag.atu_status && !pack->flag.tx) {
                     params_atu_save(pack->atu_params);
                     WITH_RADIO_LOCK(x6100_control_atu_tune(false));
+                    recover_tx();
                     params_bool_set(&params.atu, true);
                     notify_rx();
 
