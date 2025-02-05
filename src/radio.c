@@ -69,10 +69,11 @@ static void radio_unlock() {
 }
 
 void recover_tx() {
+    x6100_vfo_t cur_vfo = params_band_vfo_get();
     // delay 100ms
     usleep(10000);
     // set to USB-DIG mode
-    x6100_control_vfo_mode_set(subject_get_int(cfg_cur.band->vfo.val), x6100_mode_usb_dig);
+    x6100_control_vfo_mode_set(cur_vfo, x6100_mode_usb_dig);
     // set to minimal power
     x6100_control_txpwr_set(0.1f);
     // PTT ON
@@ -84,7 +85,7 @@ void recover_tx() {
     // Restore pwr
     x6100_control_txpwr_set(params.pwr);
     // Restore mode
-    x6100_control_vfo_mode_set(subject_get_int(cfg_cur.band->vfo.val), subject_get_int(cfg_cur.mode));
+    x6100_control_vfo_mode_set(cur_vfo, params_band_vfo_mode_get(cur_vfo));
 }
 
 bool radio_tick() {
