@@ -32,7 +32,7 @@ static bool edit_ok() {
     const char *callsign = textarea_window_get();
     params_str_set(&params.callsign, callsign);
     if (strlen(callsign) > 6) {
-        msg_schedule_text_fmt("Callsign >6chars may cause FT8 issues");
+        msg_schedule_text_fmt("FT8 may fail with long calls");
     }
     dialog_destruct(&dialog);
     return true;
