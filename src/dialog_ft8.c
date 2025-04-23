@@ -911,7 +911,7 @@ static void cell_press_cb(lv_event_t * e) {
             (cell_data->cell_type == CELL_TX_MSG) ||
             (cell_data->cell_type == CELL_RX_INFO)
         ) {
-            msg_schedule_text_fmt("What should I do about it? what what ");
+            msg_schedule_text_fmt("What should I do about it?");
         } else {
             ftx_qso_processor_start_qso(qso_processor, &cell_data->meta, &tx_msg);
             if (strlen(tx_msg.msg) > 0) {
