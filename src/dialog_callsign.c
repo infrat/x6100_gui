@@ -32,8 +32,7 @@ static bool edit_ok() {
     const char *callsign = textarea_window_get();
     params_str_set(&params.callsign, callsign);
     // if (strlen(callsign) > 6) {
-        msg_schedule_text_fmt("Callsign >6chars may cause FT8 issues");
-        usleep(1000000);
+        // usleep(1000000);
     // }
     dialog_destruct(&dialog);
     return true;
@@ -57,7 +56,7 @@ static void construct_cb(lv_obj_t *parent) {
     lv_textarea_set_max_length(text, sizeof(params.callsign.x) - 1);
     lv_textarea_set_placeholder_text(text, "Callsign");
     lv_obj_add_event_cb(text, key_cb, LV_EVENT_KEY, NULL);
-
+    msg_schedule_text_fmt("Test");
     textarea_window_set(params.callsign.x);
 }
 
